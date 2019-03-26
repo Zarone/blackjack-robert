@@ -16,7 +16,7 @@ class Blackjack():
         """function __init__
         """
         self.players = []
-        self.dealer = Player(9999,'dealer')
+        self.dealer = Player(9999, 'dealer')
         self.deck = Deck()
         self.new_game(1)
 
@@ -117,5 +117,5 @@ class Blackjack():
             self.players[-1].new_hand(self.deck)
 
 b = Blackjack()
-b.new_game(2)
+b.new_game(1)
 b.resolve_round()
