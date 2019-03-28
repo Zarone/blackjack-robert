@@ -1,6 +1,7 @@
 import os
 from deck import Deck
 from player import Player
+import Cards
 
 class Blackjack():
     """Class Blackjack
@@ -12,9 +13,13 @@ class Blackjack():
     """
 
     # Operations
-    def __init__(self):
+    def __init__(self, video_stream, train_ranks, train_suits):
         """function __init__
         """
+        self.video_stream = video_stream
+        self.train_ranks = train_ranks
+        self.train_suits = train_suits
+
         self.players = []
         self.dealer = Player(9999, 'dealer')
         self.deck = Deck()
@@ -24,6 +29,16 @@ class Blackjack():
         turn = True
         while turn:
             os.system('cls' if os.name == 'nt' else 'clear')
+            cards = self.get_cards()
+            if cards is not None:
+                s = ''
+                for i in range(len(cards)):
+                    s += cards[i].best_rank_match + ' of ' + cards[i].best_suit_match + '. '
+                print(s)
+            else:
+                print('None found')
+
+
             print('Dealers hand: ' + self.dealer.hand.cards[0].get_str() + ' and an unkown card')
             print('Player ' + str(p.id) + "'s cards:")
             for c in p.hand.cards:
@@ -116,6 +131,23 @@ class Blackjack():
             self.players.append(Player(i + 1))
             self.players[-1].new_hand(self.deck)
 
-b = Blackjack()
-b.new_game(1)
-b.resolve_round()
+    def get_cards(self):
+        img = self.video_stream.read()
+
+        pre = Cards.preprocess_image(img)
+
+        cnts, cnt_card = Cards.find_cards(pre)
+
+        if len(cnts) != 0:
+            cards = []
+
+            for i, cnt in enumerate(cnts):
+                if cnt_card[i] == 1:
+                    found_card = Cards.preprocess_card(cnt, img)
+                    cards.append(found_card)
+                    found_card.best_rank_match, found_card.best_suit_match, found_card.rank_diff, found_card.suit_diff = Cards.match_card(found_card, self.train_ranks, self.train_suits)
+            if len(cards) != 0:
+                for c in cards:
+                    print(c)
+                return cards
+        return None
