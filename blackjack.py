@@ -29,6 +29,7 @@ class Blackjack():
         turn = True
         while turn:
             os.system('cls' if os.name == 'nt' else 'clear')
+            '''
             cards = self.get_cards()
             if cards is not None:
                 s = ''
@@ -37,7 +38,7 @@ class Blackjack():
                 print(s)
             else:
                 print('None found')
-
+            '''
 
             print('Dealers hand: ' + self.dealer.hand.cards[0].get_str() + ' and an unkown card')
             print('Player ' + str(p.id) + "'s cards:")
@@ -130,7 +131,7 @@ class Blackjack():
         for i in range(num_players):
             self.players.append(Player(i + 1))
             self.players[-1].new_hand(self.deck)
-
+    '''
     def get_cards(self):
         img = self.video_stream.read()
 
@@ -151,3 +152,4 @@ class Blackjack():
                     print(c)
                 return cards
         return None
+    '''
